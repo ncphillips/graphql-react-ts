@@ -4,21 +4,29 @@
 
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import * as PropTypes from "prop-types";
+import gql from "graphql-tag";
+import { useQuery } from "react-apollo-hooks";
 
-const Hello = props => <div>Hello {props.name}!</div>;
+import client from "../apollo-client";
+import { ApolloProvider as ApolloHooksProvider } from "react-apollo-hooks";
 
-Hello.defaultProps = {
-  name: "David"
-};
-
-Hello.propTypes = {
-  name: PropTypes.string
-};
+function Hello() {
+  let testFieldQuery = useQuery(QUERY_TEST_FIELD, { suspend: false });
+  if (testFieldQuery.loading) return <div>Loading</div>;
+  return <div>Test Field: {testFieldQuery.data.testField}</div>;
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   ReactDOM.render(
-    <Hello name="Nolan Test" />,
+    <ApolloHooksProvider client={client}>
+      <Hello />
+    </ApolloHooksProvider>,
     document.body.appendChild(document.createElement("div"))
   );
 });
+
+const QUERY_TEST_FIELD = gql`
+  query TestField {
+    testField
+  }
+`;

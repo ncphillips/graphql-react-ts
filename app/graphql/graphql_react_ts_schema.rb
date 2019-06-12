@@ -5,3 +5,5 @@ class GraphqlReactTsSchema < GraphQL::Schema
   query(Types::QueryType)
   subscription(Types::SubscriptionType)
 end
+
+GraphqlReactTsSchema.graphql_definition
